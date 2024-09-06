@@ -14,7 +14,7 @@ String formatDateTime(DateTime dateTime) {
   String day = twoDigits(dateTime.day);
   String month = twoDigits(dateTime.month);
   String year = dateTime.year.toString();
-  String time = formatTime(dateTime);
+  String time = '${twoDigits(dateTime.hour)}:${twoDigits(dateTime.minute)}';
 
   return '$day/$month/$year at $time';
 }

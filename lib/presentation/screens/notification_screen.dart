@@ -5,10 +5,12 @@ import 'package:test_push_jeleapps/presentation/utils/time_formatter.dart';
 
 class NotificationScreen extends StatefulWidget {
   final NotificationModel notificationModel;
+  final String deviceToken;
 
   const NotificationScreen({
     super.key,
     required this.notificationModel,
+    required this.deviceToken,
   });
 
   @override
@@ -16,22 +18,6 @@ class NotificationScreen extends StatefulWidget {
 }
 
 class _NotificationScreenState extends State<NotificationScreen> {
-  String? deviceToken;
-
-  @override
-  void initState() {
-    _getDeviceToken();
-    super.initState();
-  }
-
-  Future<void> _getDeviceToken() async {
-    String? token = await FirebaseMessagingApi().getDeviceToken();
-    print(token);
-    setState(() {
-      deviceToken = token;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     String formmatedTime =
@@ -70,7 +56,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
               height: 20,
             ),
             Text(
-              'Device-Token: $deviceToken',
+              'Device-Token: ${widget.deviceToken}',
               style: Theme.of(context).textTheme.labelSmall,
             ),
             const SizedBox(

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:test_push_jeleapps/presentation/style/colors.dart';
 
 enum ButtonType { primary, secondary }

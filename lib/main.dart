@@ -1,6 +1,4 @@
-import 'package:bloc/bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test_push_jeleapps/api/firebase_api.dart';
@@ -12,13 +10,14 @@ import 'package:test_push_jeleapps/presentation/routes/routes.dart';
 import 'package:test_push_jeleapps/presentation/screens/home_screen.dart';
 import 'package:test_push_jeleapps/presentation/style/themes.dart';
 
+late String deviceToken;
+final firebaseMessagingApi = FirebaseMessagingApi();
+final notificationRepo = NotificationRepo();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
-  // Ensure that Firebase Messaging instance is initialized
-  await FirebaseMessaging.instance.getToken();
-
+  deviceToken = await firebaseMessagingApi.getDeviceToken();
   runApp(const MainApp());
 }
 
@@ -34,8 +33,8 @@ class MainApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => NotificationBloc(
-            notificationRepo: NotificationRepo(),
-            firebaseMessagingApi: FirebaseMessagingApi(),
+            notificationRepo: notificationRepo,
+            firebaseMessagingApi: firebaseMessagingApi,
           ),
         ),
       ],
@@ -48,14 +47,13 @@ class MainApp extends StatelessWidget {
               return FadeTransition(opacity: animation, child: child);
             },
             child: MaterialApp(
-              key: ValueKey(themeMode),
+              key: UniqueKey(),
               themeMode: themeMode,
               theme: AppTheme.lightTheme, // Light theme
               darkTheme: AppTheme.darkTheme, // Dark theme
               onGenerateRoute: AppRoutes.generateRoute,
-              initialRoute: AppRoutes.home,
               debugShowCheckedModeBanner: false,
-              home: HomeScreen(),
+              home: HomeScreen(deviceToken: deviceToken),
             ),
           );
         },
